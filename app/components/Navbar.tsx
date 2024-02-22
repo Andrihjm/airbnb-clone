@@ -25,7 +25,7 @@ const Navbar = () => {
         </Link>
 
         <div className="rounded-full border px-5 py-2">
-          <h2>Sign In</h2>
+          <h2>Search your product</h2>
         </div>
 
         <UserNav />
