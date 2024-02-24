@@ -1,4 +1,5 @@
 import Counter from "@/app/components/Counter";
+import CreationButtonBar from "@/app/components/CreationButtonBar";
 import { Card, CardHeader } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -24,6 +25,7 @@ const page = () => {
               placeholder="Short and Simple...."
             />
           </div>
+
           <div className="flex flex-col gap-y-2">
             <Label>Description</Label>
             <Textarea
@@ -32,6 +34,7 @@ const page = () => {
               placeholder="Please describe your home...."
             />
           </div>
+
           <div className="flex flex-col gap-y-2">
             <Label>Price</Label>
             <Input
@@ -42,11 +45,13 @@ const page = () => {
               min={10}
             />
           </div>
+
           <div className="flex flex-col gap-y-2">
             <Label>Image</Label>
             <Input type="file" name="image" required />
           </div>
 
+          {/* ------ Card Sections ------ */}
           <Card>
             <CardHeader className="flex flex-col gap-y-5">
               <div className="flex items-center justify-between">
@@ -56,8 +61,9 @@ const page = () => {
                     How many guests do you want?
                   </p>
                 </div>
-                <Counter />
+                <Counter name="guest" />
               </div>
+
               <div className="flex items-center justify-between">
                 <div className="flex flex-col">
                   <h3 className="underline font-medium">Rooms</h3>
@@ -65,8 +71,9 @@ const page = () => {
                     How many Rooms do you have?
                   </p>
                 </div>
-                <Counter />
+                <Counter name="room" />
               </div>
+
               <div className="flex items-center justify-between">
                 <div className="flex flex-col">
                   <h3 className="underline font-medium">Bathrooms</h3>
@@ -74,11 +81,13 @@ const page = () => {
                     How many Bathrooms do you have?
                   </p>
                 </div>
-                <Counter />
+                <Counter name="bathroom" />
               </div>
             </CardHeader>
           </Card>
         </div>
+
+        <CreationButtonBar />
       </form>
     </>
   );
