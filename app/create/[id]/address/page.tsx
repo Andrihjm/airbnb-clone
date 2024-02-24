@@ -1,5 +1,6 @@
 "use client";
 
+import CreationButtonBar from "@/app/components/CreationButtonBar";
 import {
   Select,
   SelectContent,
@@ -10,9 +11,22 @@ import {
 } from "@/components/ui/select";
 import { useCountries } from "@/lib/getCounteries";
 import { SelectValue } from "@radix-ui/react-select";
+import { useState } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
+import dynamic from "next/dynamic";
 
 const page = () => {
-  const { getAllCountries } = useCountries();
+
+  // GET REGION
+  const { getAllCountries } = useCountries(); 
+  const [locationValue, setLocationValue] = useState("");
+
+  // DI COMMAND KARENA ERROR 
+  
+  // const LazyMap = dynamic(() => import('@/app/components/Map'), {
+  //   ssr: false,
+  //   loading: () => <Skeleton className="w-full h-[50vh]" />
+  // })
 
   return (
     <>
@@ -22,10 +36,10 @@ const page = () => {
         </h2>
       </div>
 
-      <form action="">
+      <form>
         <div className="w-3/5 mx-auto">
           <div className="mb-5">
-            <Select>
+            <Select required onValueChange={(value) => setLocationValue(value)}>
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Select an Country" />
               </SelectTrigger>
@@ -42,7 +56,11 @@ const page = () => {
               </SelectContent>
             </Select>
           </div>
+
+          {/* <LazyMap locationValue={locationValue} />   Tidak bisa di gunakan ye, ntah kenapa */}
         </div>
+
+        <CreationButtonBar />
       </form>
     </>
   );
