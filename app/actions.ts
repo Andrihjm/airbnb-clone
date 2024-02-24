@@ -4,6 +4,7 @@ import prisma from "@/lib/db";
 import { supabase } from "@/lib/supabase";
 import { redirect } from "next/navigation";
 
+// DATA BASE createAirbnbHome
 export async function createAirbnbHome({ userId }: { userId: string }) {
   const data = await prisma.home.findFirst({
     where: {
@@ -29,9 +30,27 @@ export async function createAirbnbHome({ userId }: { userId: string }) {
     return redirect(`/create/${data.id}/structure`);
   } else if (data.addedCategory && !data.addedDescription) {
     return redirect(`/create/${data.id}/description`);
+  } else if (
+    data.addedCategory &&
+    data.addedDescription &&
+    !data.addedLocation
+  ) {
+    return redirect(`/create/${data.id}/address`);
+  } else if (
+    data.addedCategory &&
+    data.addedDescription &&
+    data.addedLocation
+  ) {
+    const data = await prisma.home.create({
+      data: {
+        userId: userId,
+      },
+    });
+    return redirect(`/create/${data.id}/structure`);
   }
 }
 
+// DATA BASE createCategoryPage
 export async function createCategoryPage(formData: FormData) {
   const categoryName = formData.get("categoryName") as string;
   const homeId = formData.get("homeId") as string;
@@ -47,6 +66,7 @@ export async function createCategoryPage(formData: FormData) {
   return redirect(`/create/${homeId}/description`);
 }
 
+// DATA BASE CreateDescription
 export async function CreateDescription(formData: FormData) {
   // Description Page Property
   const title = formData.get("title") as string;
@@ -66,21 +86,38 @@ export async function CreateDescription(formData: FormData) {
       contentType: "image/png",
     });
 
-    const data = await prisma.home.update({
-      where: {
-        id: homeId
-      },
-      data: {
-        title: title,
-        descrption: description,
-        price: Number(price),
-        badrooms: roomNumber,
-        // bathroom: bathroomNumber,
-        guests: guestNumber,
-        photo: imageData?.path,
-        addedDescription: true,
-      }
-    })
+  const data = await prisma.home.update({
+    where: {
+      id: homeId,
+    },
+    data: {
+      title: title,
+      descrption: description,
+      price: Number(price),
+      badrooms: roomNumber,
+      // bathroom: bathroomNumber,
+      guests: guestNumber,
+      photo: imageData?.path,
+      addedDescription: true,
+    },
+  });
 
-    return redirect(`/create/${homeId}/address`)
+  return redirect(`/create/${homeId}/address`);
+}
+
+// DATA BASE createLocation
+export async function createLocation(formData: FormData) {
+  const homeId = formData.get("homeId") as string;
+  const countryValue = formData.get("countryValue") as string;
+
+  const data = await prisma.home.update({
+    where: {
+      id: homeId,
+    },
+    data: {
+      addedLocation: true,
+      country: countryValue,
+    },
+  });
+  return redirect(`/`);
 }

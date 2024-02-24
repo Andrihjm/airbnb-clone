@@ -1,6 +1,6 @@
 "use client";
 
-import CreationButtonBar from "@/app/components/CreationButtonBar";
+import { useState } from "react";
 import {
   Select,
   SelectContent,
@@ -11,18 +11,18 @@ import {
 } from "@/components/ui/select";
 import { useCountries } from "@/lib/getCounteries";
 import { SelectValue } from "@radix-ui/react-select";
-import { useState } from "react";
+import { createLocation } from "@/app/actions";
+import CreationButtonBar from "@/app/components/CreationButtonBar";
 import { Skeleton } from "@/components/ui/skeleton";
 import dynamic from "next/dynamic";
 
-const page = () => {
-
+const page = ({ params }: { params: { id: string } }) => {
   // GET REGION
-  const { getAllCountries } = useCountries(); 
+  const { getAllCountries } = useCountries();
   const [locationValue, setLocationValue] = useState("");
 
-  // DI COMMAND KARENA ERROR 
-  
+  // DI COMMAND KARENA ERROR
+
   // const LazyMap = dynamic(() => import('@/app/components/Map'), {
   //   ssr: false,
   //   loading: () => <Skeleton className="w-full h-[50vh]" />
@@ -36,7 +36,9 @@ const page = () => {
         </h2>
       </div>
 
-      <form>
+      <form action={createLocation}>
+        <input type="hidden" name="homeId" value={params.id} />
+        <input type="hidden" name="countryValue" value={locationValue} />
         <div className="w-3/5 mx-auto">
           <div className="mb-5">
             <Select required onValueChange={(value) => setLocationValue(value)}>
