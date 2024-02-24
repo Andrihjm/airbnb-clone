@@ -1,6 +1,7 @@
 "use server";
 
 import prisma from "@/lib/db";
+import { supabase } from "@/lib/supabase";
 import { redirect } from "next/navigation";
 
 export async function createAirbnbHome({ userId }: { userId: string }) {
@@ -31,31 +32,55 @@ export async function createAirbnbHome({ userId }: { userId: string }) {
   }
 }
 
-
 export async function createCategoryPage(formData: FormData) {
-    const categoryName = formData.get("categoryName") as string;
-    const homeId = formData.get("homeId") as string
-    const data = await prisma.home.update({
-        where: {
-            id: homeId,
-        },
-        data: {
-            categoryName: categoryName,
-            addedCategory: true,
-        }
-    })
-    return redirect(`/create/${homeId}/description`)
+  const categoryName = formData.get("categoryName") as string;
+  const homeId = formData.get("homeId") as string;
+  const data = await prisma.home.update({
+    where: {
+      id: homeId,
+    },
+    data: {
+      categoryName: categoryName,
+      addedCategory: true,
+    },
+  });
+  return redirect(`/create/${homeId}/description`);
 }
 
 export async function CreateDescription(formData: FormData) {
   // Description Page Property
   const title = formData.get("title") as string;
-  const  description = formData.get("description") as string;
+  const description = formData.get("description") as string;
   const price = formData.get("price");
   const imageFile = formData.get("image") as File;
+  const homeId = formData.get("homeId") as string;
 
   const guestNumber = formData.get("guest") as string;
   const roomNumber = formData.get("room") as string;
   const bathroomNumber = formData.get("bathroom") as string;
+
+  const { data: imageData } = await supabase.storage
+    .from("images")
+    .upload(`${imageFile.name}-${new Date()}`, imageFile, {
+      cacheControl: "2592000",
+      contentType: "image/png",
+    });
+
+    const data = await prisma.home.update({
+      where: {
+        id: homeId
+      },
+      data: {
+        title: title,
+        descrption: description,
+        price: Number(price),
+        badrooms: roomNumber,
+        // bathroom: bathroomNumber,
+        guests: guestNumber,
+        photo: imageData?.path,
+        addedDescription: true,
+      }
+    })
+
+    return redirect(`/create/${homeId}/address`)
 }
-                                
