@@ -51,6 +51,7 @@ export function AddToFavoriteButton() {
   );
 }
 
+
 export function DeleteFromFavoriteButton() {
   const { pending } = useFormStatus();
   return (

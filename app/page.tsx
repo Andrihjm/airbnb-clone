@@ -9,7 +9,7 @@ import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 async function getData({
   // Show Filter Items
   searchParams,
-  userId
+  userId,
 }: {
   userId: string | undefined;
   searchParams?: {
@@ -76,7 +76,10 @@ async function ShowItems({
   return (
     <>
       {data.length === 0 ? (
-        <NoItems />
+        <NoItems
+          title="Sorry no listhings found for this category...."
+          description="Please check a other category or create your own listings!"
+        />
       ) : (
         <div className="grid lg:grid-cols-4 sm:grid-cols-2 md:grid-cols-3 gap-8 mt-8">
           {data.map((item) => (
