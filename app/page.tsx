@@ -1,13 +1,23 @@
+import { Suspense } from "react";
 import ListingCard from "./components/ListingCard";
 import MapFilterItems from "./components/MapFilterItems";
 import prisma from "@/lib/db";
+import SkeletonCard from "./components/SkeletonCard";
 
-async function getData() {
+async function getData({
+  // Show Filter Items
+  searchParams,
+}: {
+  searchParams?: {
+    filter?: string;
+  };
+}) {
   const data = await prisma.home.findMany({
     where: {
       addedCategory: true,
       addedLocation: true,
       addedDescription: true,
+      categoryName: searchParams?.filter ?? undefined,
     },
     select: {
       id: true,
@@ -20,26 +30,68 @@ async function getData() {
   return data;
 }
 
-export default async function Home() {
-  const data = await getData();
+export default function Home({
+  // Show Filter Items
+  searchParams,
+}: {
+  searchParams?: {
+    filter?: string;
+  };
+}) {
 
   return (
     <>
       <div className="container mx-auto px-5 lg:px-10">
         <MapFilterItems />
-
-        <div className="grid lg:grid-cols-4 sm:grid-cols-2 md:grid-cols-3 gap-8 mt-8">
-          {data.map((item) => (
-            <ListingCard
-              key={item.id}
-              imagePath={item.photo as string}
-              description={item.descrption as string}
-              location={item.country as string}
-              price={item.price as number}
-            />
-          ))}
-        </div>
+        
+        <Suspense key={searchParams?.filter} fallback={<SkeletonLoading />}>
+          <ShowItems searchParams={searchParams} />
+        </Suspense>
       </div>
     </>
   );
+}
+
+// Show Filter Items
+async function ShowItems({
+  // Show Filter Items
+  searchParams,
+}: {
+  searchParams?: {
+    filter?: string;
+  };
+}) {
+  const data = await getData({ searchParams: searchParams });
+
+  return (
+    <div className="grid lg:grid-cols-4 sm:grid-cols-2 md:grid-cols-3 gap-8 mt-8">
+      {data.map((item) => (
+        <ListingCard
+          key={item.id}
+          imagePath={item.photo as string}
+          description={item.descrption as string}
+          location={item.country as string}
+          price={item.price as number}
+        />
+      ))}
+    </div>
+  );
+}
+
+
+function SkeletonLoading() {
+  return (
+    <div className="grid lg:grid-cols-4 sm:grid-cols-2 md:grid-cols-3 gap-8 mt-8">
+      <SkeletonCard />
+      <SkeletonCard />
+      <SkeletonCard />
+      <SkeletonCard />
+      <SkeletonCard />
+      <SkeletonCard />
+      <SkeletonCard />
+      <SkeletonCard />
+      <SkeletonCard />
+      <SkeletonCard />
+    </div>
+  )
 }
