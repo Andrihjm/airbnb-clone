@@ -2,6 +2,7 @@
 
 import prisma from "@/lib/db";
 import { supabase } from "@/lib/supabase";
+import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 // DATA BASE createAirbnbHome
@@ -120,4 +121,35 @@ export async function createLocation(formData: FormData) {
     },
   });
   return redirect(`/`);
+}
+
+export async function addToFavorite(formData: FormData) {
+  const homeId = formData.get("homeId") as string;
+  const userId = formData.get("userId") as string;
+  const pathName = formData.get("pathName") as string;
+
+  const data = await prisma.favorite.create({
+    data: {
+      homeId: homeId,
+      userId: userId,
+    },
+  });
+
+  revalidatePath(pathName)
+}
+
+
+export async function DeleteFromFavorite(formData: FormData) {
+  const favoriteId = formData.get("favoriteId") as string
+  const pathName = formData.get("pathName") as string
+  const userId = formData.get("userId") as string
+
+  const data = await prisma.favorite.delete({
+    where: {
+      id: favoriteId,
+      userId: userId,
+    }
+  })
+
+  revalidatePath(pathName)
 }
