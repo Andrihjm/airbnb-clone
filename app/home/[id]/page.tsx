@@ -78,7 +78,7 @@ export default async function HomeRoute({
             {/* {data?.bathrooms} ----- TIDKA BISA DI PAKAI KARENA LUPA MASUKAN CODE DI FILE LUAR NYA ----- */}
           </div>
 
-          <div className="flex items-center mt-6">
+          <div className="flex items-center mt-6 gap-2">
             <img
               src={
                 data?.User?.profileImage ??
