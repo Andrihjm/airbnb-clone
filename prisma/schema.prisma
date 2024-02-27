@@ -57,3 +57,5 @@ model Favorite {
 
   createAt DateTime @default(now())
 }
+
+// model Reservation
