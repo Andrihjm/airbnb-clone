@@ -1,10 +1,14 @@
+import { createReservation } from "@/app/actions";
 import CategoryShowCase from "@/app/components/CategoryShowCase";
 import { HomeMap } from "@/app/components/HomeMap";
 import SelectedCalender from "@/app/components/SelectedCalender";
+import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import prisma from "@/lib/db";
 import { useCountries } from "@/lib/getCounteries";
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import Image from "next/image";
+import Link from "next/link";
 
 async function getData(homeid: string) {
   const data = await prisma.home.findUnique({
@@ -21,6 +25,11 @@ async function getData(homeid: string) {
       title: true,
       categoryName: true,
       country: true,
+      Reservation: {
+        where: {
+          homeId: homeid,
+        }
+      },
       User: {
         select: {
           profileImage: true,
@@ -40,6 +49,10 @@ export default async function HomeRoute({
   const data = await getData(params.id);
   const { getCountryByValue } = useCountries();
   const country = getCountryByValue(data?.country as string);
+
+  // Variabel Kalender
+  const { getUser } = getKindeServerSession();
+  const user = await getUser();
 
   return (
     <div className="w-[75%] mx-auto mt-10 mb-12">
@@ -90,7 +103,22 @@ export default async function HomeRoute({
           </div>
         </div>
 
-        <SelectedCalender />
+        <form action={createReservation}>
+          <input type="hidden" name="homeId" value={params.id} />
+          <input type="hidden" name="userId" value={user?.id} />
+
+          <SelectedCalender reservation={data?.Reservation} />
+
+          {user?.id ? (
+            <Button type="submit" className="w-full">
+              Make a Reservation
+            </Button>
+          ) : (
+            <Button className="w-full" asChild>
+              <Link href={"/api/auth/login"}>Make a Reservation</Link>
+            </Button>
+          )}
+        </form>
       </div>
     </div>
   );
