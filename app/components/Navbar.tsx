@@ -5,6 +5,7 @@ import Link from "next/link";
 import DesktopLogo from "../../public/airbnb-desktop.png";
 import MobileLogo from "../../public/airbnb-mobile.webp";
 import { UserNav } from "./UserNav";
+import SearchComponent from "./Search";
 
 const Navbar = () => {
   return (
@@ -24,9 +25,7 @@ const Navbar = () => {
           />
         </Link>
 
-        <div className="rounded-full border px-5 py-2">
-          <h2>Search your product</h2>
-        </div>
+        <SearchComponent />
 
         <UserNav />
       </div>

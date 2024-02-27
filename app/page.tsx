@@ -5,6 +5,7 @@ import prisma from "@/lib/db";
 import SkeletonCard from "./components/SkeletonCard";
 import NoItems from "./components/NoItems";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+import { unstable_noStore as noStore } from "next/cache";
 
 async function getData({
   // Show Filter Items
@@ -14,14 +15,23 @@ async function getData({
   userId: string | undefined;
   searchParams?: {
     filter?: string;
+    country?: string;
+    guests?: string;
+    room?: string;
+    bathroom?: string;
   };
 }) {
+  noStore()
   const data = await prisma.home.findMany({
     where: {
       addedCategory: true,
       addedLocation: true,
       addedDescription: true,
       categoryName: searchParams?.filter ?? undefined,
+      country: searchParams?.country ?? undefined,
+      guests: searchParams?.guests ?? undefined,
+      badrooms: searchParams?.room ?? undefined,
+      // bathrooms: searchParams?.bathroom ?? undefined,
     },
     select: {
       id: true,
@@ -45,6 +55,10 @@ export default function Home({
 }: {
   searchParams?: {
     filter?: string;
+    country?: string;
+    guests?: string;
+    room?: string;
+    bathroom?: string;
   };
 }) {
   return (
@@ -67,6 +81,10 @@ async function ShowItems({
 }: {
   searchParams?: {
     filter?: string;
+    country?: string;
+    guests?: string;
+    room?: string;
+    bathroom?: string;
   };
 }) {
   const { getUser } = getKindeServerSession();

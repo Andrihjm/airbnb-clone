@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import React from "react";
-import SubmitButtons from "./SubmitButtons";
+import { CreationSubmit } from "./SubmitButtons";
 
 const CreationButtonBar = () => {
   return (
@@ -11,7 +11,7 @@ const CreationButtonBar = () => {
           <Button variant={"secondary"} size={"lg"}>
             <Link href={"/"}>Cancel</Link>
           </Button>
-          <SubmitButtons />
+          <CreationSubmit />
         </div>
       </div>
     </>
