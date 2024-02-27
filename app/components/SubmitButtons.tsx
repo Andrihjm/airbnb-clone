@@ -51,7 +51,6 @@ export function AddToFavoriteButton() {
   );
 }
 
-
 export function DeleteFromFavoriteButton() {
   const { pending } = useFormStatus();
   return (
@@ -73,6 +72,23 @@ export function DeleteFromFavoriteButton() {
           type="submit"
         >
           <Heart className="w-4 h-4 text-primary" fill="#E21C49" />
+        </Button>
+      )}
+    </>
+  );
+}
+
+export function ReservationSubmitButton() {
+  const { pending } = useFormStatus();
+  return (
+    <>
+      {pending ? (
+        <Button type="submit" className="w-full">
+          <Loader2 className="w-4 h-4 mr-2 animate-spin" /> Please Wait....
+        </Button>
+      ) : (
+        <Button type="submit" className="w-full">
+          Make a Reservation
         </Button>
       )}
     </>

@@ -2,6 +2,7 @@ import { createReservation } from "@/app/actions";
 import CategoryShowCase from "@/app/components/CategoryShowCase";
 import { HomeMap } from "@/app/components/HomeMap";
 import SelectedCalender from "@/app/components/SelectedCalender";
+import { ReservationSubmitButton } from "@/app/components/SubmitButtons";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import prisma from "@/lib/db";
@@ -28,7 +29,7 @@ async function getData(homeid: string) {
       Reservation: {
         where: {
           homeId: homeid,
-        }
+        },
       },
       User: {
         select: {
@@ -110,9 +111,7 @@ export default async function HomeRoute({
           <SelectedCalender reservation={data?.Reservation} />
 
           {user?.id ? (
-            <Button type="submit" className="w-full">
-              Make a Reservation
-            </Button>
+            <ReservationSubmitButton />
           ) : (
             <Button className="w-full" asChild>
               <Link href={"/api/auth/login"}>Make a Reservation</Link>
