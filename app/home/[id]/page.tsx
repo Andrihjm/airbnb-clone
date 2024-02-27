@@ -1,3 +1,4 @@
+import CategoryShowCase from "@/app/components/CategoryShowCase";
 import { Separator } from "@/components/ui/separator";
 import prisma from "@/lib/db";
 import { useCountries } from "@/lib/getCounteries";
@@ -39,7 +40,7 @@ export default async function HomeRoute({
   const country = getCountryByValue(data?.country as string);
 
   return (
-    <div className="w-[75%] mx-auto mt-10">
+    <div className="w-[75%] mx-auto mt-10 mb-12">
       <h1 className="mb-5 font-medium text-2xl">{data?.title}</h1>
 
       <div className="relative h-[550px]">
@@ -75,7 +76,14 @@ export default async function HomeRoute({
               <p className="text-sm text-muted-foreground">Host since 2015</p>
             </div>
           </div>
-          <Separator className="my-7" />
+
+          <div>
+            <Separator className="my-7" />
+            <CategoryShowCase categoryName={data?.categoryName as string} />
+            <Separator className="my-7" />
+            <p className="text-muted-foreground">{data?.descrption}</p>
+            <Separator className="my-7" />
+          </div>
         </div>
       </div>
     </div>
